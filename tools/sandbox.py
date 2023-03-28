@@ -9,6 +9,7 @@ import glob
 
 IEND_CHUNK = bytes.fromhex('0000000049454E44AE426082')
 IEND_CHUNK_LENGTH = len(IEND_CHUNK)
+ROOT = Path(__file__).parents[2]
 
 
 def _repair(file_path):
@@ -78,6 +79,23 @@ def repair_images(path):
     _process(path, args.recursive)
 
 
+def resize_image(file, size, style='folder'):
+    assert style in ['file', 'folder'], 'Fix save style^ should be in [file, folder]'
+    image = cv2.imread(file)
+    coefficient = round(max(image.shape[:2]) / size, 4)
+    dim = (int(image.shape[1] / coefficient), int(image.shape[0] / coefficient))
+    resized_image = cv2.resize(image, dim, interpolation=cv2.INTER_AREA)
+
+    save_path = f'{Path(file).parent}/{Path(file).stem}_resized{max_size}{Path(file).suffix}'
+    cv2.imwrite(save_path, resized_image)
+
+
+def resize_to(path_template, size, style='folder'):
+    assert style in ['file', 'folder'], 'Fix save style^ should be in [file, folder]'
+    for file in glob.glob(path_template):
+        resize_image(file, size, style)
+
+
 class InferenceBox:
     def __init__(self, det='DBNet', rec='CRNN'):
         self.ocr = MMOCRInferencer(det=det, rec=rec)
@@ -87,15 +105,10 @@ class InferenceBox:
 
 
 if __name__ == '__main__':
-    # repair_images('../../data')
+    target_folder = ROOT / 'data/original_data'
+    # repair_images(target_folder)
     max_size = 900
-    for file in glob.glob('../../data/*.png'):
-        image = cv2.imread(file)
-        coefficient = round(max(image.shape[:2]) / max_size, 4)
-        dim = (int(image.shape[1] / coefficient), int(image.shape[0] / coefficient))
+    path_template = target_folder / '*.png'
+    resize_to(path_template=path_template, size=max_size)
 
-        resized_image = cv2.resize(image, dim, interpolation=cv2.INTER_AREA)
-
-        save_path = f'{Path(file).parent}/{Path(file).stem}_resized{Path(file).suffix}'
-        cv2.imwrite(save_path, resized_image)
 
