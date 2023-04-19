@@ -17,7 +17,7 @@ def parse_args():
     parser = argparse.ArgumentParser(description='Train a model')
     # parser.add_argument('config', help='Train config file path')
     parser.add_argument('--config',
-                        default='configs/textrecog/crnn/crnn_mini-vgg_5e_icdar2015.py',
+                        default='configs/textrecog/sar/sar_resnet31_parallel-decoder_5e_picasso.py',
 
                         help='Train config file path')
     parser.add_argument('--work-dir', help='The dir to save logs and models')
