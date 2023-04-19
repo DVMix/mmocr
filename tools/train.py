@@ -14,8 +14,7 @@ def parse_args():
     parser = argparse.ArgumentParser(description='Train a model')
     # parser.add_argument('config', help='Train config file path')
     parser.add_argument('--config',
-                        # default='configs/textdet/dbnet/dbnet_resnet18_fpnc_1200e_icdar2015.py',
-                        default='configs/textdet/dbnet/dbnet_resnet18_fpnc_1200e_picasso.py',
+                        default='configs/textdet/dbnet/dbnet_resnet18_fpnc_1200e_icdar2015.py',
                         help='Train config file path')
     parser.add_argument('--work-dir', help='The dir to save logs and models')
     parser.add_argument(
